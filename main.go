@@ -22,8 +22,18 @@ var users = []user{
 func main() {
 	router := gin.Default()
 	router.GET("/users", getUser)
+	router.POST("/users", addUser)
 	router.Run("localhost:8080")
+
 }
 func getUser(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, user)
+	c.IndentedJSON(http.StatusOK, users)
+}
+func addUser(c *gin.Context) {
+	var newUser user
+	if err := c.BindJSON(&newUser); err != nil {
+		return
+	}
+	users = append(users, newUser)
+	c.IndentedJSON(http.StatusCreated, newUser)
 }
