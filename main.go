@@ -23,6 +23,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/users", getUser)
 	router.POST("/users", addUser)
+	router.GET("/users/:id", getUserId)
 	router.Run("localhost:8080")
 
 }
@@ -36,4 +37,14 @@ func addUser(c *gin.Context) {
 	}
 	users = append(users, newUser)
 	c.IndentedJSON(http.StatusCreated, newUser)
+}
+func getUserId(c *gin.Context) {
+	id := c.Param("id")
+	for _, a := range users {
+		if a.ID == id {
+			c.IndentedJSON(http.StatusOK, a)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "not found"})
 }
